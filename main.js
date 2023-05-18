@@ -46,6 +46,10 @@ client.once(Events.ClientReady, c => {
     .setName('balance')
     .setDescription('Shows your balance');
 
+    const clear = new SlashCommandBuilder()
+    .setName('clear')
+    .setDescription('cleares all data in dataset');
+
     const all = new SlashCommandBuilder()
     .setName('all')
     .setDescription("everyone's balance");
@@ -53,6 +57,7 @@ client.once(Events.ClientReady, c => {
     client.application.commands.create(given, "[server id]")
     client.application.commands.create(balance, "[server id]")
     client.application.commands.create(taken, "[server id]")
+    client.application.commands.create(clear, "[server id]")
     client.application.commands.create(all, "[server id]")
 })
 
@@ -119,6 +124,16 @@ client.on(Events.InteractionCreate, interaction => {
           interaction.reply(user+' not fount in csv data file!');
         }
       }
+    }
+
+    if(interaction.commandName === "clear"){
+
+      for(i = 0; i < Object.keys(data).length; i++){
+        data[i].Balance = 0; 
+      }
+      const dataInCsv = new Parser({fields: ["Name","Balance"]}).parse(data);
+      fs.writeFileSync("Data.csv",dataInCsv);
+      interaction.reply('All data cleared in csv data file!');
     }
 
     if(interaction.commandName === "all"){
