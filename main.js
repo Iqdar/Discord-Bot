@@ -39,7 +39,7 @@ client.once(Events.ClientReady, c => {
     .addNumberOption(option =>
       option
       .setName('amount')
-      .setDescription('Amount given')
+      .setDescription('Amount taken')
       .setRequired(true));
 
     const balance = new SlashCommandBuilder()
@@ -54,11 +54,11 @@ client.once(Events.ClientReady, c => {
     .setName('all')
     .setDescription("everyone's balance");
 
-    client.application.commands.create(given, "[server id]")
-    client.application.commands.create(balance, "[server id]")
-    client.application.commands.create(taken, "[server id]")
-    client.application.commands.create(clear, "[server id]")
-    client.application.commands.create(all, "[server id]")
+    client.application.commands.create(given, "[Seerver ID]")
+    client.application.commands.create(balance, "[Seerver ID]")
+    client.application.commands.create(taken, "[Seerver ID]")
+    client.application.commands.create(clear, "[Seerver ID]")
+    client.application.commands.create(all, "[Seerver ID]")
 })
 
 
@@ -139,7 +139,7 @@ client.on(Events.InteractionCreate, interaction => {
     if(interaction.commandName === "all"){
       const user = interaction.user.username;
       var bal;
-      let output;
+      let output = "";
       for(i = 1; i < Object.keys(data).length; i++){
         bal = data[i].Balance;
         if(bal < 0){
@@ -149,9 +149,10 @@ client.on(Events.InteractionCreate, interaction => {
           output = output + data[i].Name + "'s credit is "+bal+"! \n";
         }
       }
+      interaction.reply(output);
     }
 })
 
 
-client.login('[bot token]');
+client.login('[Bot Token]');
 
