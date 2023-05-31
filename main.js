@@ -26,7 +26,7 @@ client.once(Events.ClientReady, c => {
 
     const given = new SlashCommandBuilder()
     .setName('given')
-    .setDescription('Bot to get equal amounts from everyone')
+    .setDescription('Amount given from everyone')
     .addNumberOption(option =>
       option
       .setName('amount')
@@ -54,11 +54,11 @@ client.once(Events.ClientReady, c => {
     .setName('all')
     .setDescription("everyone's balance");
 
-    client.application.commands.create(given, "[Seerver ID]")
-    client.application.commands.create(balance, "[Seerver ID]")
-    client.application.commands.create(taken, "[Seerver ID]")
-    client.application.commands.create(clear, "[Seerver ID]")
-    client.application.commands.create(all, "[Seerver ID]")
+    client.application.commands.create(given, "1105080364864639056")
+    client.application.commands.create(balance, "1105080364864639056")
+    client.application.commands.create(taken, "1105080364864639056")
+    client.application.commands.create(clear, "1105080364864639056")
+    client.application.commands.create(all, "1105080364864639056")
 })
 
 
@@ -67,7 +67,7 @@ client.on(Events.InteractionCreate, interaction => {
     if(interaction.commandName === "given"){
       const user = interaction.user.username;
       var amount = interaction.options.getNumber('amount');
-      const amountToDeduct = amount/6;
+      const amountToDeduct = amount/(Object.keys(data)-1);
       data[0].Balance = data[0].Balance + amount;
       for(i = 1; i < Object.keys(data).length; i++){
         if(data[i].Name == user){
@@ -86,11 +86,14 @@ client.on(Events.InteractionCreate, interaction => {
       }
     }
 
-    if(interaction.commandName === "taken"){
+    if(interacnode .Balancetion.commandName === "taken"){
       const user = interaction.user.username;
       var amount = interaction.options.getNumber('amount');
       for(i = 1; i < Object.keys(data).length; i++){
         if(data[i].Name == user && amount<=data[i].Balance){
+          for(j = 1; j < Object.keys(data).length; j++){
+            data[j].Balance = data[j].Balance + amount/(Object.keys(data)-1);
+          }
           data[i].Balance = data[i].Balance - amount;          
           const dataInCsv = new Parser({fields: ["Name","Balance"]}).parse(data);
           fs.writeFileSync("Data.csv",dataInCsv);
@@ -154,5 +157,5 @@ client.on(Events.InteractionCreate, interaction => {
 })
 
 
-client.login('[Bot Token]');
+client.login('MTEwNTEyMDY0MTAzMzY5OTM3OQ.G1tE_R.FmnqHAP6Yhz88UlSRuxOTzOPHs0NlsILDDxRjA');
 
