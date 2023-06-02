@@ -40,6 +40,11 @@ client.once(Events.ClientReady, c => {
       option
       .setName('amount')
       .setDescription('Amount taken')
+      .setRequired(true))
+    .addMentionableOption(option =>
+      option
+      .setName('name')
+      .setDescription('Amount taken from')
       .setRequired(true));
 
     const balance = new SlashCommandBuilder()
@@ -68,12 +73,12 @@ client.on(Events.InteractionCreate, interaction => {
       const user = interaction.user.username;
       var amount = interaction.options.getNumber('amount');
       const amountToDeduct = amount/(Object.keys(data)-1);
-      data[0].Balance = data[0].Balance + amount;
+      data[0].Balance = Number(data[0].Balance) + Number(amount);
       for(i = 1; i < Object.keys(data).length; i++){
         if(data[i].Name == user){
-          data[i].Balance = data[i].Balance + amount;
+          data[i].Balance = Number(data[i].Balance) + Number(amount);
           for(j = 1; j < Object.keys(data).length; j++){
-            data[j].Balance = data[j].Balance - amountToDeduct;
+            data[j].Balance = Number(data[j].Balance) - Number(amountToDeduct);
           }
           const dataInCsv = new Parser({fields: ["Name","Balance"]}).parse(data);
           fs.writeFileSync("Data.csv",dataInCsv);
@@ -86,22 +91,31 @@ client.on(Events.InteractionCreate, interaction => {
       }
     }
 
-    if(interacnode .Balancetion.commandName === "taken"){
+    if(interaction.commandName === "taken"){
       const user = interaction.user.username;
       var amount = interaction.options.getNumber('amount');
+      const person = interaction.options.getMentionable('name').user.username;
+      console.log(person);
       for(i = 1; i < Object.keys(data).length; i++){
-        if(data[i].Name == user && amount<=data[i].Balance){
+        if(data[i].Name == user){
+          console.log(1);
           for(j = 1; j < Object.keys(data).length; j++){
-            data[j].Balance = data[j].Balance + amount/(Object.keys(data)-1);
-          }
-          data[i].Balance = data[i].Balance - amount;          
-          const dataInCsv = new Parser({fields: ["Name","Balance"]}).parse(data);
-          fs.writeFileSync("Data.csv",dataInCsv);
-          interaction.reply(user+' taken '+amount+' amount back!');
-          break;
-        }
-        else if(data[i].Name == user && amount>data[i].Balance){
-          interaction.reply(user+' does not have enough amount to take!');
+            if(data[j].Name == person && amount<=data[j].Balance){
+              console.log(2);
+              data[j].Balance = Number(data[j].Balance) + Number(amount);
+              data[i].Balance = data[i].Balance - amount;          
+              const dataInCsv = new Parser({fields: ["Name","Balance"]}).parse(data);
+              fs.writeFileSync("Data.csv",dataInCsv);
+              interaction.reply(user+' taken '+amount+' amount from '+person+'!');
+              break;  
+            }
+            else if(data[j].Name == person && amount>data[j].Balance){
+              interaction.reply(person+' does not have enough amount to give!');
+            }
+            else if(j == Object.keys(data).length){
+              interaction.reply(person+' not fount in csv data file!');
+            }
+          }  
         }
         else if(i == Object.keys(data).length){
           interaction.reply(user+' not fount in csv data file!');
@@ -157,5 +171,5 @@ client.on(Events.InteractionCreate, interaction => {
 })
 
 
-client.login('MTEwNTEyMDY0MTAzMzY5OTM3OQ.G1tE_R.FmnqHAP6Yhz88UlSRuxOTzOPHs0NlsILDDxRjA');
+client.login('MTEwNTEyMDY0MTAzMzY5OTM3OQ.G90SkR.YRc59Dtc1Yxl8eQy5mM6c1hP2JxrpfCmfjQTIg');
 
