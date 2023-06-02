@@ -100,7 +100,7 @@ client.on(Events.InteractionCreate, interaction => {
         if(data[i].Name == user){
           console.log(1);
           for(j = 1; j < Object.keys(data).length; j++){
-            if(data[j].Name == person && amount<=data[j].Balance){
+            if(data[j].Name == person){
               console.log(2);
               data[j].Balance = Number(data[j].Balance) + Number(amount);
               data[i].Balance = data[i].Balance - amount;          
@@ -108,9 +108,6 @@ client.on(Events.InteractionCreate, interaction => {
               fs.writeFileSync("Data.csv",dataInCsv);
               interaction.reply(user+' taken '+amount+' amount from '+person+'!');
               break;  
-            }
-            else if(data[j].Name == person && amount>data[j].Balance){
-              interaction.reply(person+' does not have enough amount to give!');
             }
             else if(j == Object.keys(data).length){
               interaction.reply(person+' not fount in csv data file!');
